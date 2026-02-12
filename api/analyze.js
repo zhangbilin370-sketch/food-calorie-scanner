@@ -102,6 +102,18 @@ export default async function handler(req, res) {
         });
     }
     
+    // 检查API密钥
+    if (!process.env.GEMINI_API_KEY) {
+        console.error('错误：未配置GEMINI_API_KEY环境变量');
+        return res.status(503).json({
+            success: false,
+            error: {
+                code: 'API_KEY_MISSING',
+                message: '服务器配置错误：缺少API密钥。请联系管理员配置GEMINI_API_KEY环境变量。'
+            }
+        });
+    }
+    
     try {
         // 解析multipart/form-data
         const form = new multiparty.Form();
@@ -161,27 +173,42 @@ export default async function handler(req, res) {
         });
         
     } catch (error) {
-        console.error('处理错误:', error);
+        console.error('处理错误详情:', {
+            message: error.message,
+            stack: error.stack,
+            name: error.name
+        });
         
         let statusCode = 500;
         let errorCode = 'INTERNAL_ERROR';
         let message = '服务器内部错误';
         
-        if (error.message.includes('无法识别')) {
+        // 检查是否是API密钥相关错误
+        if (error.message && (
+            error.message.includes('API key') || 
+            error.message.includes('API_KEY') ||
+            error.message.includes('invalid') ||
+            error.message.includes('unauthorized')
+        )) {
+            statusCode = 503;
+            errorCode = 'API_KEY_ERROR';
+            message = 'API密钥无效或未配置。请检查GEMINI_API_KEY环境变量。';
+        } else if (error.message && error.message.includes('无法识别')) {
             statusCode = 422;
             errorCode = 'RECOGNITION_FAILED';
             message = '无法识别图片中的食物，请重新拍摄更清晰的照片';
-        } else if (error.message.includes('API') || error.message.includes('GEMINI')) {
+        } else if (error.message && (error.message.includes('API') || error.message.includes('GEMINI'))) {
             statusCode = 503;
             errorCode = 'API_ERROR';
-            message = 'AI服务暂时不可用，请稍后重试';
+            message = 'AI服务暂时不可用，请稍后重试。错误：' + error.message;
         }
         
         res.status(statusCode).json({
             success: false,
             error: {
                 code: errorCode,
-                message: message
+                message: message,
+                debug: process.env.NODE_ENV === 'development' ? error.message : undefined
             }
         });
     }

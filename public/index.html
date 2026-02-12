@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>食物热量扫描器</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div id="app">
+        <!-- 主标题 -->
+        <header>
+            <h1>🍎 食物热量扫描器</h1>
+            <p class="subtitle">拍照识别食物，获取热量信息</p>
+        </header>
+
+        <!-- 拍照按钮区域 -->
+        <div id="camera-section" class="section">
+            <button id="capture-btn" class="primary-btn">
+                📷 拍照识别
+            </button>
+        </div>
+
+        <!-- 摄像头预览区域 -->
+        <div id="preview-section" class="section hidden">
+            <video id="video" autoplay playsinline></video>
+            <canvas id="canvas" class="hidden"></canvas>
+            <div class="button-group">
+                <button id="take-photo-btn" class="primary-btn">拍摄</button>
+                <button id="cancel-btn" class="secondary-btn">取消</button>
+            </div>
+        </div>
+
+        <!-- 加载状态 -->
+        <div id="loading-section" class="section hidden">
+            <div class="spinner"></div>
+            <p id="loading-text">正在上传图片...</p>
+            <div class="progress-bar">
+                <div id="progress" class="progress-fill"></div>
+            </div>
+        </div>
+
+        <!-- 结果展示区域 -->
+        <div id="result-section" class="section hidden">
+            <div class="result-card">
+                <h2 id="food-name">苹果</h2>
+                <div class="calorie-info">
+                    <span class="calorie-number" id="calories">52</span>
+                    <span class="calorie-unit">kcal</span>
+                </div>
+                <div class="advice-box">
+                    <h3>💡 健康建议</h3>
+                    <p id="health-advice">苹果富含膳食纤维和维生素C，是健康的低热量水果。</p>
+                </div>
+            </div>
+            <button id="recapture-btn" class="primary-btn">重新拍照</button>
+        </div>
+
+        <!-- 错误提示区域 -->
+        <div id="error-section" class="section hidden">
+            <div class="error-card">
+                <div class="error-icon">⚠️</div>
+                <p id="error-message">发生错误</p>
+            </div>
+            <button id="retry-btn" class="primary-btn">重试</button>
+            <button id="back-btn" class="secondary-btn">返回</button>
+        </div>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>

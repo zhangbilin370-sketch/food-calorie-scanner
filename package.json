@@ -1,0 +1,19 @@
+{
+  "name": "food-calorie-scanner",
+  "version": "1.0.0",
+  "description": "手机网页应用 - 拍照识别食物热量",
+  "type": "module",
+  "scripts": {
+    "dev": "node server/index.js",
+    "start": "node server/index.js"
+  },
+  "dependencies": {
+    "express": "^4.18.2",
+    "cors": "^2.8.5",
+    "multer": "^1.4.5-lts.1",
+    "@google/generative-ai": "^0.21.0",
+    "dotenv": "^16.3.1",
+    "sharp": "^0.33.0",
+    "multiparty": "^4.2.3"
+  }
+}
